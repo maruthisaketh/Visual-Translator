@@ -1,4 +1,4 @@
-from src.image_text import extract_text
+from image_text import extract_text
 
 def runOCR():
     try:
