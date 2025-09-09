@@ -3,47 +3,52 @@ import pytesseract
 from matplotlib import pyplot as plt
 import sys, os
 
-pytesseract.pytesseract.tesseract_cmd=r'C:\Program Files\Tesseract-OCR\\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd=r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 def extract_text():
 
     try:
 
         #Read the image
-        image_path = "assets\supertext.jpg"
+        image_path = "..\\assets\\sample.png"
         image = cv2.imread(image_path)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         #Convert image to Grayscale
-        image_gray = cv2.cvtColor(image_rgb, cv2.COLOR_BGR2GRAY)
+        image_gray = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2GRAY)
 
         #Display Original image
-        cv2.imshow('Original', image)
+        cv2.imshow('Original', image_rgb)
 
         #Display Gray Image
         cv2.imshow('Gray Scale', image_gray)
 
-        # #Extract Text from Image
-        # extracted_text = pytesseract.image_to_string(image_gray)
+        #Extract Text from Image
+        extracted_text = pytesseract.image_to_string(image_gray)
 
-        # print("Extracted Text:\n")
-        # print(extracted_text)
+        print("Extracted Text:\n")
+        print(extracted_text)
 
-        # #Draw Bounding Boxes around the text in image
-        # data = pytesseract.image_to_data(image_gray, output_type=pytesseract.Output.DICT)
+        #Draw Bounding Boxes around the text in image
+        data = pytesseract.image_to_data(image_gray, output_type=pytesseract.Output.DICT)
 
-        # n_boxes = len(data['level'])
-        # for i in range(n_boxes):
-        #     (x, y, w, h) = (data['left'][i], data['top'][i], data['width'][i], data['height'][i])
-        #     cv2.rectangle(image_gray, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        n_boxes = len(data['level'])
+        for i in range(n_boxes):
+            (x, y, w, h) = (data['left'][i], data['top'][i], data['width'][i], data['height'][i])
+            cv2.rectangle(image_gray, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         
-        # #Display the image with bounding boxes
-        # plt.figure(figsize=(10, 6))
-        # plt.imshow(image_gray)
-        # plt.title("Image with Text Bounding Boxes")
-        # plt.axis("off")
-        # plt.show()
+        #Display the image with bounding boxes
+        plt.figure(figsize=(10, 6))
+        plt.imshow(image_gray)
+        plt.title("Image with Text Bounding Boxes")
+        plt.axis("off")
+        plt.show()
+    except pytesseract.TesseractNotFoundError:
+        return "Tesseract OCR engine not found. Please ensure it's installed and in your PATH."
+    
+    except FileNotFoundError:
+        return f"Image not found at: {image_path}"
     
     except Exception as e:
         # Get Exception type, Exception message, Exception text from exception info
