@@ -10,12 +10,15 @@ def extract_text():
     try:
 
         #Read the image
-        image_path = "..\\assets\\sample.png"
+        image_path = "..\\assets\\wiki.png"
         image = cv2.imread(image_path)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         #Convert image to Grayscale
         image_gray = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2GRAY)
+
+        # Apply thresholding for better contrast
+        _, image_gray = cv2.threshold(image_gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
         #Display Original image
         cv2.imshow('Original', image_rgb)
@@ -35,12 +38,12 @@ def extract_text():
         n_boxes = len(data['level'])
         for i in range(n_boxes):
             (x, y, w, h) = (data['left'][i], data['top'][i], data['width'][i], data['height'][i])
-            cv2.rectangle(image_gray, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            cv2.rectangle(image_rgb, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         
         #Display the image with bounding boxes
         plt.figure(figsize=(10, 6))
-        plt.imshow(image_gray)
+        plt.imshow(image_rgb)
         plt.title("Image with Text Bounding Boxes")
         plt.axis("off")
         plt.show()
