@@ -2,10 +2,19 @@ import cv2
 import pytesseract
 from matplotlib import pyplot as plt
 import sys, os
+from langdetect import detect, DetectorFactory
+import subprocess
 
 pytesseract.pytesseract.tesseract_cmd=r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
-def extract_text():
+DetectorFactory.seed = 0
+
+def get_installed_tesseract_languages():
+    out = subprocess.check_output(['tesseract', "--list-langs"], text=True)
+    langs = out.strip().split("\n")[1:]
+    return langs
+
+def extract_text_from_image():
 
     try:
 
@@ -42,11 +51,13 @@ def extract_text():
 
         
         #Display the image with bounding boxes
-        plt.figure(figsize=(10, 6))
-        plt.imshow(image_rgb)
-        plt.title("Image with Text Bounding Boxes")
-        plt.axis("off")
-        plt.show()
+        # plt.figure(figsize=(10, 6))
+        # plt.imshow(image_rgb)
+        # plt.title("Image with Text Bounding Boxes")
+        # plt.axis("off")
+        # plt.show()
+
+        return extracted_text
     except pytesseract.TesseractNotFoundError:
         return "Tesseract OCR engine not found. Please ensure it's installed and in your PATH."
     
