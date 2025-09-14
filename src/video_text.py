@@ -2,6 +2,7 @@ import cv2
 import pytesseract
 from matplotlib import pyplot as plt
 import sys, os
+import numpy as np
 
 pytesseract.pytesseract.tesseract_cmd=r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
@@ -11,26 +12,50 @@ def extract_text_from_video():
     try:
         cap = cv2.VideoCapture(video_path)
 
+        #Identify total number of frames
         frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         print(f"Number of frames: {frame_count}")
+
+        #Skip every 20 frames for smoother extractions
+        frame_number = 0
+        skip = 20
+
+        #Run OCR only when there's significant frame difference as well
+        prev_frame = None
+        threshold = 10000
 
         while True:
             ret, frame = cap.read()
             if not ret:
                 break  # video ended
 
+            #Skip 20 frames
+            frame_number += 1
+            if frame_number % skip != 0:
+                continue
+
             # Convert to grayscale
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            print("Why")
 
-            # Optional: improve contrast & reduce noise
-            gray = cv2.GaussianBlur(gray, (5,5), 0)
-            _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            if prev_frame is not None:
+                print("Entered")
+                # Optional: improve contrast & reduce noise
+                gray = cv2.GaussianBlur(gray, (5,5), 0)
+                _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-            # OCR
-            text = pytesseract.image_to_string(thresh, lang="eng")  # change to "jpn" for Japanese, etc.
-            if text.strip():
-                print("Detected Text:", text)
+                diff = cv2.absdiff(gray, prev_frame)
+                non_zero_count = np.count_nonzero(diff)
 
+                if non_zero_count > threshold:
+                    # OCR
+                    text = pytesseract.image_to_string(thresh, lang="eng")  # change to "jpn" for Japanese, etc.
+                    if text.strip():
+                        print("Detected Text:", text)
+
+
+            prev_frame = gray
+            
             # Show the video with bounding boxes (optional)
             cv2.imshow("Video", frame)
 
