@@ -6,7 +6,7 @@ import numpy as np
 
 pytesseract.pytesseract.tesseract_cmd=r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
-video_path = "..\\assets\\video.mp4"
+video_path = "..\\..\\assets\\video.mp4"
 
 def extract_text_from_video():
     try:
