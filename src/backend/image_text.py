@@ -19,7 +19,7 @@ def extract_text_from_image():
     try:
 
         #Read the image
-        image_path = "..\\assets\\wiki.png"
+        image_path = "..\\..\\assets\\jpn.png"
         image = cv2.imread(image_path)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -30,24 +30,23 @@ def extract_text_from_image():
         _, image_gray = cv2.threshold(image_gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
         #Display Original image
-        cv2.imshow('Original', image_rgb)
+        #cv2.imshow('Original', image_rgb)
 
         #Display Gray Image
-        cv2.imshow('Gray Scale', image_gray)
+        #cv2.imshow('Gray Scale', image_gray)
+
+        langs="+".join(get_installed_tesseract_languages())
 
         #Extract Text from Image
-        extracted_text = pytesseract.image_to_string(image_gray)
+        extracted_text = pytesseract.image_to_string(image_gray, lang=langs)
 
-        print("Extracted Text:\n")
-        print(extracted_text)
+        # #Draw Bounding Boxes around the text in image
+        # data = pytesseract.image_to_data(image_gray, output_type=pytesseract.Output.DICT)
 
-        #Draw Bounding Boxes around the text in image
-        data = pytesseract.image_to_data(image_gray, output_type=pytesseract.Output.DICT)
-
-        n_boxes = len(data['level'])
-        for i in range(n_boxes):
-            (x, y, w, h) = (data['left'][i], data['top'][i], data['width'][i], data['height'][i])
-            cv2.rectangle(image_rgb, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        # n_boxes = len(data['level'])
+        # for i in range(n_boxes):
+        #     (x, y, w, h) = (data['left'][i], data['top'][i], data['width'][i], data['height'][i])
+        #     cv2.rectangle(image_rgb, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         
         #Display the image with bounding boxes

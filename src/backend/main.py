@@ -5,11 +5,13 @@ def runOCR():
     try:
 
         #Get installed languages from tesseract
-        langs = get_installed_tesseract_languages()
+        #langs = get_installed_tesseract_languages()
 
         #Extract text from images
         extracted_text = extract_text_from_image()
+        print(extracted_text)
         
+        #Extract text from videos
         #extract_text_from_video()
     except Exception as e:
         print(e)
