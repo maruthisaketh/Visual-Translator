@@ -1,5 +1,6 @@
 from image_text import extract_text_from_image, get_installed_tesseract_languages
 from video_text import extract_text_from_video
+from translate_text import translate_text
 
 def runOCR():
     try:
@@ -10,6 +11,9 @@ def runOCR():
         #Extract text from images
         extracted_text = extract_text_from_image()
         print(extracted_text)
+
+        #Detect Language for each line of extracted text
+        translate_text(extracted_text)
         
         #Extract text from videos
         #extract_text_from_video()

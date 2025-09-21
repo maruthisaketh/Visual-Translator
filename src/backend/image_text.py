@@ -2,12 +2,11 @@ import cv2
 import pytesseract
 from matplotlib import pyplot as plt
 import sys, os
-from langdetect import detect, DetectorFactory
 import subprocess
 
 pytesseract.pytesseract.tesseract_cmd=r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
-DetectorFactory.seed = 0
+
 
 def get_installed_tesseract_languages():
     out = subprocess.check_output(['tesseract', "--list-langs"], text=True)
@@ -19,7 +18,7 @@ def extract_text_from_image():
     try:
 
         #Read the image
-        image_path = "..\\..\\assets\\jpn.png"
+        image_path = "..\\..\\assets\\sample.png"
         image = cv2.imread(image_path)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
